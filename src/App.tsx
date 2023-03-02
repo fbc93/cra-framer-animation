@@ -1,5 +1,5 @@
-import { motion } from "framer-motion"
-import { useRef } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion"
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 //style
@@ -58,6 +58,14 @@ const ConstraintWrapper = styled(motion.div)`
 `;
 
 const ConstraintDrag = styled(motion.div)`
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.06);
+`;
+
+const MotionValue = styled(motion.div)`
   width: 200px;
   height: 200px;
   background-color: white;
@@ -135,10 +143,24 @@ const constraintDragVar = {
 
 function App() {
   const constraintRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const transformation = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
 
+  // useEffect(() => {
+  //   transformation.on("change", () => );
+  // });
 
   return (
     <Wrapper>
+
+      <button onClick={() => x.set(200)}>click ME</button>
+
+      <MotionValue
+        style={{ x, scale: transformation }}
+        drag="x"
+        dragSnapToOrigin
+      />
+
       <ConstraintWrapper ref={constraintRef}>
         <ConstraintDrag
           drag
